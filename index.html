@@ -26,286 +26,133 @@
         #install-toast {
             position: fixed;
             top: 0; left: 0; right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: #1a1a1a;
-            padding: 16px;
+            background: linear-gradient(135deg, #1a5c1a 0%, #0f3d0f 100%);
+            color: white;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 9999;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             transform: translateY(-100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-sizing: border-box;
-            padding-top: max(16px, env(safe-area-inset-top));
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-bottom: 2px solid #d4af37;
         }
-
-        #install-toast.show { transform: translateY(0); }
-
-        .toast-content { display: flex; align-items: center; gap: 12px; flex: 1; }
-        .toast-icon { color: #1a5c1a; font-size: 28px; }
-        .toast-text { display: flex; flex-direction: column; }
-        .toast-title { font-weight: 700; font-size: 15px; line-height: 1.2; font-family: 'Oswald', sans-serif; }
-        .toast-desc { font-size: 11px; color: #666; font-family: sans-serif; }
-        .toast-actions { display: flex; align-items: center; gap: 8px; margin-left: 12px; }
-        
+        #install-toast.show {
+            transform: translateY(0);
+        }
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast-icon {
+            font-size: 28px;
+            color: #d4af37;
+        }
+        .toast-text h4 {
+            margin: 0;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+        .toast-text p {
+            margin: 2px 0 0 0;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .toast-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .btn-install {
-            background-color: #1a5c1a; color: white; border: none; padding: 10px 18px;
-            border-radius: 50px; font-weight: 700; font-size: 13px; cursor: pointer;
-            transition: all 0.2s; white-space: nowrap; text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(26, 92, 26, 0.4);
+            background-color: #d4af37;
+            color: #0f3d0f;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
         }
-        .btn-install:active { transform: scale(0.95); background-color: #0f3d0f; }
-        
         .btn-close-toast {
-            background: none; border: none; color: #999; cursor: pointer;
-            padding: 4px; display: flex; align-items: center;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
         }
 
-        /* ===== TELA DE LOADING PREMIUM ===== */
+        /* ===== TELA DE CARREGAMENTO (LOADER) ===== */
         #loader {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            inset: 0;
             background: radial-gradient(circle at center, #1a5c1a 0%, #0f3d0f 60%, #000000 100%);
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            z-index: 10;
-            transition: opacity 0.8s ease-out;
-            overflow: hidden;
+            justify-content: center;
+            z-index: 999;
+            transition: opacity 0.5s ease-out, visibility 0.5s;
         }
-
-        #loader.hide { opacity: 0; pointer-events: none; }
-
-        /* Campo de Futebol Estilizado de Fundo */
-        .soccer-field-bg {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px; height: 220px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            z-index: 0;
-        }
-        .center-circle { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 60px; height: 60px; border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 50%; 
-        }
-        .center-line { 
-            position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: rgba(255, 255, 255, 0.1); 
-        }
-        .penalty-box-left {
-            position: absolute; top: 25%; left: 0; width: 50px; height: 50%; border: 3px solid rgba(255, 255, 255, 0.1); border-left: none;
-        }
-        .penalty-box-right {
-            position: absolute; top: 25%; right: 0; width: 50px; height: 50%; border: 3px solid rgba(255, 255, 255, 0.1); border-right: none;
-        }
-        .goal-box-left {
-            position: absolute; top: 35%; left: 0; width: 20px; height: 30%; border: 3px solid rgba(255, 255, 255, 0.1); border-left: none;
-        }
-        .goal-box-right {
-            position: absolute; top: 35%; right: 0; width: 20px; height: 30%; border: 3px solid rgba(255, 255, 255, 0.1); border-right: none;
-        }
-
-        /* Brilhos flutuantes */
-        .particle {
-            position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.2);
-            animation: floatUp 4s infinite linear;
-        }
-        .p1 { width: 6px; height: 6px; left: 20%; animation-duration: 5s; }
-        .p2 { width: 8px; height: 8px; left: 50%; animation-duration: 7s; animation-delay: 1s; }
-        .p3 { width: 5px; height: 5px; left: 80%; animation-duration: 6s; animation-delay: 2s; }
-
-        @keyframes floatUp {
-            0% { bottom: -10%; opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 0.5; }
-            100% { bottom: 110%; opacity: 0; }
-        }
-
-        /* Container do Logo e Texto */
         .loader-content {
-            z-index: 2;
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: pulseIn 1s ease-out;
         }
-
-        @keyframes pulseIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
         .logo-container {
-            width: 110px; height: 110px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
+            padding: 20px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 90px;
+            height: 90px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            margin-bottom: 24px;
+            justify-content: center;
         }
-
         .loader-logo {
-            width: 75px; height: 75px; object-fit: contain;
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+        }
+        
+        /* TRUQUE PARA SUMIR COM O FUNDO FALSO DA LOGO */
+        .logo-blend {
+            mix-blend-mode: screen;
         }
 
         .app-title {
             font-family: 'Bebas Neue', cursive;
-            font-size: 64px; line-height: 1;
-            color: #ffffff; letter-spacing: 4px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            margin-bottom: 4px;
+            font-size: 42px;
+            color: white;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
-
         .app-subtitle {
-            font-family: 'Oswald', sans-serif;
-            font-size: 18px; letter-spacing: 6px;
-            color: #4ade80; text-transform: uppercase;
-            margin-bottom: 40px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            font-size: 14px;
+            color: #d4af37;
+            letter-spacing: 4px;
+            margin: -5px 0 30px 0;
+            text-transform: uppercase;
         }
-
-        /* Spinner Moderno */
         .modern-spinner {
-            width: 40px; height: 40px;
-            border: 4px solid transparent;
-            border-top: 4px solid #4ade80; border-right: 4px solid #4ade80;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #d4af37;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        /* Iframe que segura o Apps Script */
-        #app-frame {
-            width: 100%; height: 100%; border: none;
-            position: absolute; top: 0; left: 0; z-index: 1;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Toast de Instalação do App -->
-    <div id="install-toast">
-        <div class="toast-content">
-            <span class="material-symbols-outlined toast-icon">download</span>
-            <div class="toast-text">
-                <span class="toast-title">Instale o App Da Vila</span>
-                <span class="toast-desc">Acesse mais rápido e sem barra de busca</span>
-            </div>
-        </div>
-        <div class="toast-actions">
-            <button id="install-btn" class="btn-install">Instalar</button>
-            <button id="close-toast-btn" class="btn-close-toast">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Tela de Carregamento Inicial -->
-    <div id="loader">
-        <!-- Efeitos de Fundo -->
-        <div class="soccer-field-bg">
-            <div class="center-circle"></div>
-            <div class="center-line"></div>
-            <div class="penalty-box-left"></div>
-            <div class="penalty-box-right"></div>
-            <div class="goal-box-left"></div>
-            <div class="goal-box-right"></div>
-        </div>
-        <div class="particle p1"></div>
-        <div class="particle p2"></div>
-        <div class="particle p3"></div>
-
-        <!-- Conteúdo Principal -->
-        <div class="loader-content">
-            <div class="logo-container">
-                <img src="https://iili.io/KUH9urG.png" alt="Logo" class="loader-logo">
-            </div>
-            <div class="app-title">DA VILA</div>
-            <div class="app-subtitle">FINANÇAS</div>
-            <div class="modern-spinner"></div>
-        </div>
-    </div>
-
-    <script>
-        // ==========================================
-        // LÓGICA DO APP (Iframe e Loader)
-        // ==========================================
-        function loadApp() {
-            var appUrl = "https://script.google.com/macros/s/AKfycbzdpFHhXb5XmoaFdRuSvCbRggBHrvGZvBI0B7LP5qk/dev";
-            
-            var iframe = document.createElement('iframe');
-            iframe.src = appUrl;
-            iframe.id = 'app-frame';
-            iframe.style.cssText = 'width:100%; height:100%; border:none; position:absolute; top:0; left:0; z-index:1;';
-            
-            iframe.onload = function() {
-                setTimeout(function() {
-                    document.getElementById('loader').classList.add('hide');
-                }, 1000); // Atraso de 1 segundo após o app carregar para o loading sumir suavemente
-            };
-            document.body.appendChild(iframe);
-        }
-
-        loadApp();
-
-        // ==========================================
-        // LÓGICA DE INSTALAÇÃO DO PWA (Toast)
-        // ==========================================
-        let deferredPrompt;
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            showInstallToast();
-        });
-
-        document.getElementById('install-btn').addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            hideInstallToast();
-        });
-
-        document.getElementById('close-toast-btn').addEventListener('click', () => {
-            hideInstallToast();
-        });
-
-        window.addEventListener('appinstalled', () => {
-            hideInstallToast();
-            deferredPrompt = null;
-        });
-
-        function showInstallToast() {
-            setTimeout(() => {
-                document.getElementById('install-toast').classList.add('show');
-            }, 3000); // Atraso de 3 segundos para não atrapalhar o carregamento
-        }
-
-        function hideInstallToast() {
-            document.getElementById('install-toast').classList.remove('show');
-        }
-
-        // Registra o Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('sw.js');
-            });
-        }
-    </script>
-</body>
-</html>
