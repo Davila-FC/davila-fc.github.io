@@ -125,7 +125,6 @@
             object-fit: contain;
         }
         
-        /* TRUQUE PARA SUMIR COM O FUNDO FALSO DA LOGO */
         .logo-blend {
             mix-blend-mode: screen;
         }
@@ -156,3 +155,114 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* ===== CONTAINER DO IFRAME ===== */
+        #app-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        #app-container.loaded {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="install-toast">
+        <div class="toast-content">
+            <span class="material-symbols-outlined toast-icon">add_to_home_screen</span>
+            <div class="toast-text">
+                <h4>Instalar App Da Vila</h4>
+                <p>Adicione à tela inicial para acessar mais rápido.</p>
+            </div>
+        </div>
+        <div class="toast-actions">
+            <button id="install-btn" class="btn-install">Instalar</button>
+            <button id="close-toast-btn" class="btn-close-toast">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="loader">
+        <div class="loader-content">
+            <div class="logo-container">
+                <img src="web-app-manifest-512x512.png" alt="Logo" class="loader-logo logo-blend">
+            </div>
+            <div class="app-title">DA VILA</div>
+            <div class="app-subtitle">FINANÇAS</div>
+            <div class="modern-spinner"></div>
+        </div>
+    </div>
+
+    <iframe 
+        id="app-container" 
+        src="https://script.google.com/macros/s/AKfycbyvSgH1GvR8T2A1WvSWeR5m76S02h7Lw3j8V8Y8p-w/exec" 
+        allow="geolocation; microphone; camera">
+    </iframe>
+
+    <script>
+        const iframe = document.getElementById('app-container');
+        const loader = document.getElementById('loader');
+
+        // Esconde o loader assim que o iframe do GAS terminar de carregar
+        iframe.onload = function() {
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden';
+            iframe.classList.add('loaded');
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        };
+
+        // ==========================================
+        // LÓGICA DE INSTALAÇÃO DO PWA (BANNER)
+        // ==========================================
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallToast();
+        });
+
+        document.getElementById('install-btn').addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            hideInstallToast();
+        });
+
+        document.getElementById('close-toast-btn').addEventListener('click', () => {
+            hideInstallToast();
+        });
+
+        window.addEventListener('appinstalled', () => {
+            hideInstallToast();
+            deferredPrompt = null;
+        });
+
+        function showInstallToast() {
+            setTimeout(() => {
+                document.getElementById('install-toast').classList.add('show');
+            }, 3000); // Atraso de 3 segundos para não atrapalhar o carregamento
+        }
+
+        function hideInstallToast() {
+            document.getElementById('install-toast').classList.remove('show');
+        }
+
+        // Registra o Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
